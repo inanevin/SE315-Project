@@ -7,24 +7,98 @@ package zeus;
 
 import java.util.ArrayList;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
  * @author ROOT
  */
-public class Node {
+public class Node extends JPanel {
 
     private ArrayList<Node> _ConnectedNodes = new ArrayList<Node>();
-    private int i_LaneProperty;
-    private float f_XCor;
-    private float f_YCor;
-    private JPanel jp_This;
+    private int i_XCor;
+    private int i_YCor;
+    private int i_xSize;
+    private int i_ySize;
+    private JPanel _ParentPanel;
+    private int i_Index;
+    public MainTest main;
 
-    public Node(float x, float y, int laneP, JPanel ownPanel) {
-        f_XCor = x;
-        f_YCor = y;
-        i_LaneProperty = laneP;
-        jp_This = ownPanel;
+    public Node(int xCor, int yCor, int xS, int yS, JPanel parent, int index, MainTest m) {
+        i_XCor = xCor;
+        i_YCor = yCor;
+        i_xSize = xS;
+        i_ySize = yS;
+        _ParentPanel = parent;
+        i_Index = index;
+        main = m;
+        VO_Draw();
+    }
+
+    void VO_Draw() {
+        _ParentPanel.add(this);
+        this.add(new JLabel("Right-click for popup menu."));
+        this.setSize(i_xSize, i_ySize);
+        this.setLocation(i_XCor - i_xSize / 2, i_YCor - i_ySize / 2);
+        this.createToolTip();
+        this.setToolTipText("Node " + (MainTest._AllActiveNodes.size() + 1));
+        this.setBackground(Color.BLUE);
+        this.repaint();
+        MainTest._AllActiveNodes.add(this);
+
+        this.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    if (MainTest.b_TransitionOpen) {
+
+                        if (this.hashCode() != MainTest._CurrentTransitionNode.hashCode()) {
+                            // make transition
+                            VO_MakeTransition();
+                        } else {
+                            MainTest._CurrentTransitionNode.PVO_SetColor(Color.blue);
+                        }
+
+                        main.PVO_Transition(null);
+
+                    }
+                }
+                repaint();
+            }
+
+        });
+
+        JPopupMenu popup = new JPopupMenu("Sa");
+        JMenuItem menuItemTransition = new JMenuItem("Make Transition");
+        JMenuItem menuItemOptions = new JMenuItem("Specific Options");
+        JMenuItem menuItemDelete = new JMenuItem("Delete");
+
+        MenuItemActionListener transitionListener = new MenuItemActionListener(this, MenuItemActionListener.PopupType.Transition);
+        MenuItemActionListener optionsListener = new MenuItemActionListener(this, MenuItemActionListener.PopupType.Options);
+        MenuItemActionListener deleteListener = new MenuItemActionListener(this, MenuItemActionListener.PopupType.Delete);
+
+        menuItemTransition.addActionListener(transitionListener);
+        menuItemOptions.addActionListener(optionsListener);
+        menuItemDelete.addActionListener(deleteListener);
+
+        popup.add(menuItemTransition);
+        popup.add(menuItemOptions);
+        popup.add(menuItemDelete);
+        this.setComponentPopupMenu(popup);
+    }
+
+    private void VO_MakeTransition() {
+        MainTest._CurrentTransitionNode.PVO_SetColor(Color.green);
+        PVO_SetColor(Color.green);
+        MainTest._CurrentTransitionNode.NodeConnected(this);
+        NodeConnected(MainTest._CurrentTransitionNode);
+        Road betweenRoad = new Road(MainTest._CurrentTransitionNode, this, _ParentPanel);
     }
 
     public Node GetClosestOrFurthestNode(boolean closest) {
@@ -55,6 +129,10 @@ public class Node {
         return _ConnectedNodes.get(foundIndex);
     }
 
+    public int GetIndex() {
+        return i_Index;
+    }
+
     public void NodeConnected(Node n) {
         _ConnectedNodes.add(n);
     }
@@ -65,36 +143,28 @@ public class Node {
         }
     }
 
-    public void SetPanel(JPanel jp) {
-        jp_This = jp;
+    public void PVO_SetColor(Color col) {
+        this.setBackground(col);
     }
 
-    public JPanel GetPanel() {
-        return jp_This;
+    public JPanel GetParentPanel() {
+        return _ParentPanel;
     }
 
-    public float GetX() {
-        return f_XCor;
+    public int GetX() {
+        return i_XCor;
     }
 
-    public void SetX(float v) {
-        f_XCor = v;
+    public void SetX(int v) {
+        i_XCor = v;
     }
 
-    public float GetY() {
-        return f_YCor;
+    public int GetY() {
+        return i_YCor;
     }
 
-    public void SetY(float v) {
-        f_YCor = v;
-    }
-
-    public int GetLaneP() {
-        return i_LaneProperty;
-    }
-
-    public void SetLaneP(int v) {
-        i_LaneProperty = v;
+    public void SetY(int v) {
+        i_YCor = v;
     }
 
 }

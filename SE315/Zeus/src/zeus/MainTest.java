@@ -6,12 +6,19 @@
 package zeus;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.*;
 import java.awt.Cursor;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -24,13 +31,18 @@ public class MainTest extends javax.swing.JFrame {
     };
     private CurrentEditingTool _CurrentEditingTool;
 
+    public static LinesComponent _LineDrawer = new LinesComponent();
     public static ArrayList<Node> _AllActiveNodes = new ArrayList<Node>();
+    public static boolean b_TransitionOpen;
+    public static Node _CurrentTransitionNode;
 
     /**
      * Creates new form MainTest
      */
     public MainTest() {
         initComponents();
+        
+
     }
 
     /**
@@ -47,6 +59,8 @@ public class MainTest extends javax.swing.JFrame {
         LightAdjuster = new javax.swing.JToggleButton();
         ZebraCrossings = new javax.swing.JToggleButton();
         ScenePanel = new javax.swing.JPanel();
+        CurrentSelectedTool = new javax.swing.JLabel();
+        SelectedNode = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         ExportScene = new javax.swing.JMenuItem();
@@ -112,15 +126,29 @@ public class MainTest extends javax.swing.JFrame {
             }
         });
 
+        CurrentSelectedTool.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CurrentSelectedTool.setText("No Tool Selected");
+
+        SelectedNode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        SelectedNode.setText("No Node Selected");
+
         javax.swing.GroupLayout ScenePanelLayout = new javax.swing.GroupLayout(ScenePanel);
         ScenePanel.setLayout(ScenePanelLayout);
         ScenePanelLayout.setHorizontalGroup(
             ScenePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 776, Short.MAX_VALUE)
+            .addGroup(ScenePanelLayout.createSequentialGroup()
+                .addGap(286, 286, 286)
+                .addGroup(ScenePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(SelectedNode, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CurrentSelectedTool, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(310, 310, 310))
         );
         ScenePanelLayout.setVerticalGroup(
             ScenePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
+            .addGroup(ScenePanelLayout.createSequentialGroup()
+                .addComponent(CurrentSelectedTool, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 452, Short.MAX_VALUE)
+                .addComponent(SelectedNode, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jMenu1.setText("File");
@@ -290,25 +318,16 @@ public class MainTest extends javax.swing.JFrame {
     private void ScenePanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ScenePanelMouseClicked
         // TODO add your handling code here:
 
-        if (_CurrentEditingTool == CurrentEditingTool.RoadDrawer) {
-
-            JPanel nodePanel = new JPanel(new BorderLayout());
-            ScenePanel.add(nodePanel);
-
-            int xSize = 25;
-            int ySize = 25;
-
-            nodePanel.setSize(xSize, ySize);
-            nodePanel.setLocation(evt.getX() - xSize / 2, evt.getY() - ySize / 2);
-            nodePanel.createToolTip();
-            nodePanel.setToolTipText("Node " + (_AllActiveNodes.size() + 1));
-            nodePanel.repaint();
-
-            Node newNode = new Node(evt.getX(), evt.getY(), 1, nodePanel);
-            _AllActiveNodes.add(newNode);
-
+        if (b_TransitionOpen) {
+            _CurrentTransitionNode.PVO_SetColor(Color.BLUE);
+            PVO_Transition(null);
         }
 
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            if (_CurrentEditingTool == CurrentEditingTool.RoadDrawer) {
+                Node newNode = new Node(evt.getX(), evt.getY(), 10, 10, ScenePanel, _AllActiveNodes.size(), this);
+            }
+        }
     }//GEN-LAST:event_ScenePanelMouseClicked
 
     /**
@@ -342,24 +361,45 @@ public class MainTest extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainTest().setVisible(true);
+
             }
         });
     }
 
     private void VO_ChangeCursor() {
         Cursor cursor = Cursor.getDefaultCursor();
+
         if (_CurrentEditingTool == CurrentEditingTool.RoadDrawer) {
             cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+            CurrentSelectedTool.setText("Road Drawer Selected");
         } else if (_CurrentEditingTool == CurrentEditingTool.ZebraCrossing) {
             cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+            CurrentSelectedTool.setText("Zebra Crossing Selected");
         } else if (_CurrentEditingTool == CurrentEditingTool.Lights) {
             cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
+            CurrentSelectedTool.setText("Lights Selected");
+        } else {
+            CurrentSelectedTool.setText("No Tool Selected");
+
         }
         setCursor(cursor);
     }
 
+    public void PVO_Transition(Node associatedNode) {
+        _CurrentTransitionNode = associatedNode;
+        b_TransitionOpen = !b_TransitionOpen;
+
+        if (_CurrentTransitionNode != null) {
+            SelectedNode.setText("Node " + _CurrentTransitionNode.GetIndex());
+        } else {
+            SelectedNode.setText("No node selected.");
+        }
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem About;
+    private javax.swing.JLabel CurrentSelectedTool;
     private javax.swing.JPanel EditToolbar;
     private javax.swing.JMenuItem Exit;
     private javax.swing.JMenuItem ExportScene;
@@ -368,6 +408,7 @@ public class MainTest extends javax.swing.JFrame {
     private javax.swing.JToggleButton LightAdjuster;
     private javax.swing.JToggleButton RoadDrawerButton;
     private javax.swing.JPanel ScenePanel;
+    private javax.swing.JLabel SelectedNode;
     private javax.swing.JCheckBoxMenuItem ShowEditingToolbar;
     private javax.swing.JToggleButton ZebraCrossings;
     private javax.swing.JMenu jMenu1;
