@@ -24,10 +24,15 @@ public class Node extends JPanel {
     private int i_XCor;
     private int i_YCor;
     private int i_xSize;
-    private int i_ySize;
-    private JPanel _ParentPanel;
+    public int i_ySize;
+    public JPanel _ParentPanel;
     private int i_Index;
     public MainTest main;
+    private boolean b_HasLight;
+    private Light _AttachedLight;
+    private long redTime = 5000;
+    private long yellowTime = 1000;
+    private long greenTime = 5000;
 
     public Node(int xCor, int yCor, int xS, int yS, JPanel parent, int index, MainTest m) {
         i_XCor = xCor;
@@ -42,7 +47,6 @@ public class Node extends JPanel {
 
     void VO_Draw() {
         _ParentPanel.add(this);
-        this.add(new JLabel("Right-click for popup menu."));
         this.setSize(i_xSize, i_ySize);
         this.setLocation(i_XCor - i_xSize / 2, i_YCor - i_ySize / 2);
         this.createToolTip();
@@ -56,18 +60,24 @@ public class Node extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    if (MainTest.b_TransitionOpen) {
 
-                        if (this.hashCode() != MainTest._CurrentTransitionNode.hashCode()) {
-                            // make transition
-                            VO_MakeTransition();
-                        } else {
-                            MainTest._CurrentTransitionNode.PVO_SetColor(Color.blue);
+                    if (main._CurrentEditingTool == MainTest.CurrentEditingTool.RoadDrawer) {
+                        if (MainTest.b_TransitionOpen) {
+
+                            if (this.hashCode() != MainTest._CurrentTransitionNode.hashCode()) {
+                                // make transition
+                                VO_MakeTransition();
+                            } else {
+                                MainTest._CurrentTransitionNode.PVO_SetColor(Color.blue);
+                            }
+
+                            main.PVO_Transition(null);
+
                         }
-
-                        main.PVO_Transition(null);
-
+                    } else if (main._CurrentEditingTool == MainTest.CurrentEditingTool.Lights) {
+                        VO_CreateNewLight();
                     }
+
                 }
                 repaint();
             }
@@ -91,6 +101,27 @@ public class Node extends JPanel {
         popup.add(menuItemOptions);
         popup.add(menuItemDelete);
         this.setComponentPopupMenu(popup);
+    }
+
+    public void PVO_SetTimings(long red, long yellow, long green) {
+        redTime = red;
+        yellowTime = yellow;
+        greenTime = green;
+        
+        if(_AttachedLight != null)
+        {
+            _AttachedLight.PVO_SetTimes(redTime, yellowTime, greenTime);
+        }
+            
+    }
+
+    private void VO_CreateNewLight() {
+        if (b_HasLight) {
+            return;
+        }
+
+        b_HasLight = true;
+        _AttachedLight = new Light(this, redTime, yellowTime, greenTime);
     }
 
     private void VO_MakeTransition() {

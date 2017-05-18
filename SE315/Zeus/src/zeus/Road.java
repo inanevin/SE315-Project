@@ -27,6 +27,7 @@ public class Road extends JPanel {
         _Node1 = n1;
         _Node2 = n2;
         _ParentPanel = parentPanel;
+       
         //JFrame testFrame = (JFrame) SwingUtilities.getRoot(_Node1);
         // testFrame.getContentPane().setBackground(Color.RED);
         //testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

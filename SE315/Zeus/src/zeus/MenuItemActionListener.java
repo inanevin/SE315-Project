@@ -34,7 +34,8 @@ public class MenuItemActionListener implements ActionListener {
             _AssociatedNode.PVO_SetColor(Color.RED);
 
         } else if (_PopupType == PopupType.Options) {
-
+            _AssociatedNode.main._CurrentOptionedNode = _AssociatedNode;
+            _AssociatedNode.main.PVO_EnableNodeOptions();
         } else if (_PopupType == PopupType.Delete) {
 
         }
