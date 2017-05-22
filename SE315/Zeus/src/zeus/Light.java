@@ -43,12 +43,12 @@ public class Light extends JPanel {
         l_LightYellowTime = yellow;
         l_CurrentLightTime = l_LightRedTime;
         attachedNode._ParentPanel.add(this);
+        MainTest._AllLights.add(this);
         this.setSize(10, 10);
         this.setLocation(attachedNode.GetX() + 15, attachedNode.GetY() - 5);
         this.setBackground(Color.RED);
         this.repaint();
         PVO_TimerFinished();
-
     }
 
     public void PVO_SetTimes(long red, long yellow, long green) {

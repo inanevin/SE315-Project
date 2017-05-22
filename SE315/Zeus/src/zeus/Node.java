@@ -30,6 +30,7 @@ public class Node extends JPanel {
     public MainTest main;
     private boolean b_HasLight;
     private Light _AttachedLight;
+    private Road _AttachedRoad;
     private long redTime = 5000;
     private long yellowTime = 1000;
     private long greenTime = 5000;
@@ -61,19 +62,17 @@ public class Node extends JPanel {
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
 
-                    if (main._CurrentEditingTool == MainTest.CurrentEditingTool.RoadDrawer) {
-                        if (MainTest.b_TransitionOpen) {
+                    if (MainTest.b_TransitionOpen) {
 
-                            if (this.hashCode() != MainTest._CurrentTransitionNode.hashCode()) {
-                                // make transition
-                                VO_MakeTransition();
-                            } else {
-                                MainTest._CurrentTransitionNode.PVO_SetColor(Color.blue);
-                            }
-
-                            main.PVO_Transition(null);
-
+                        if (this.hashCode() != MainTest._CurrentTransitionNode.hashCode()) {
+                            // make transition
+                            VO_MakeTransition();
+                        } else {
+                            MainTest._CurrentTransitionNode.PVO_SetColor(Color.blue);
                         }
+
+                        main.PVO_Transition(null);
+
                     } else if (main._CurrentEditingTool == MainTest.CurrentEditingTool.Lights) {
                         VO_CreateNewLight();
                     }
@@ -101,18 +100,35 @@ public class Node extends JPanel {
         popup.add(menuItemOptions);
         popup.add(menuItemDelete);
         this.setComponentPopupMenu(popup);
+
+    }
+
+    public Road GetRoad() {
+        return _AttachedRoad;
+    }
+
+    public Light GetLight() {
+        return _AttachedLight;
+    }
+
+    public void SetRoad(Road r) {
+        _AttachedRoad = r;
+    }
+    
+    public void SetLight(Light l)
+    {
+        _AttachedLight = l;
     }
 
     public void PVO_SetTimings(long red, long yellow, long green) {
         redTime = red;
         yellowTime = yellow;
         greenTime = green;
-        
-        if(_AttachedLight != null)
-        {
+
+        if (_AttachedLight != null) {
             _AttachedLight.PVO_SetTimes(redTime, yellowTime, greenTime);
         }
-            
+
     }
 
     private void VO_CreateNewLight() {

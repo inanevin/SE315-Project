@@ -37,7 +37,20 @@ public class MenuItemActionListener implements ActionListener {
             _AssociatedNode.main._CurrentOptionedNode = _AssociatedNode;
             _AssociatedNode.main.PVO_EnableNodeOptions();
         } else if (_PopupType == PopupType.Delete) {
-
+            _AssociatedNode._ParentPanel.remove(_AssociatedNode);
+            if (_AssociatedNode.GetLight() != null) {
+                _AssociatedNode._ParentPanel.remove(_AssociatedNode.GetLight());
+                MainTest._AllLights.remove(_AssociatedNode.GetLight());
+                _AssociatedNode.SetLight(null);
+            }
+            if (_AssociatedNode.GetRoad() != null) {
+                _AssociatedNode._ParentPanel.remove(_AssociatedNode.GetRoad());
+                MainTest._Roads.remove(_AssociatedNode.GetRoad());
+                _AssociatedNode.SetRoad(null);
+            }
+            MainTest._AllActiveNodes.remove(_AssociatedNode);
+            _AssociatedNode._ParentPanel.repaint();
+            _AssociatedNode = null;
         }
     }
 

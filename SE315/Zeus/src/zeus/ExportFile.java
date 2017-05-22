@@ -15,10 +15,11 @@ import java.io.IOException;
  */
 public class ExportFile {
     
-    private static final String filePath = System.getProperty("user.home") + "/Desktop\\tet.txt";
+    private String filePath = System.getProperty("user.home") + "/Desktop\\test.txt";
     
-    public static void WriteFile(String content)
+    public void WriteFile(String content, String fp, String fileName)
     {
+        filePath = fp + ".txt";
         BufferedWriter bw = null;
         FileWriter fw = null;
         

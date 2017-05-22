@@ -19,6 +19,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import java.awt.Graphics;
 
 /**
  *
@@ -32,6 +33,7 @@ public class MainTest extends javax.swing.JFrame {
     public CurrentEditingTool _CurrentEditingTool;
 
     public static ArrayList<Node> _AllActiveNodes = new ArrayList<Node>();
+    public static ArrayList<Light> _AllLights = new ArrayList<Light>();
     public static boolean b_TransitionOpen;
     public static Node _CurrentTransitionNode;
     public static boolean b_SceneClicksEnabled = true;
@@ -43,6 +45,7 @@ public class MainTest extends javax.swing.JFrame {
     public MainTest() {
         initComponents();
         NodeOptionsPanel.setVisible(false);
+        AboutPanel.setVisible(false);
     }
 
     /**
@@ -54,11 +57,15 @@ public class MainTest extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        Frame1 = new javax.swing.JFrame();
+        FileSaver = new javax.swing.JFileChooser();
+        Frame2 = new javax.swing.JFrame();
+        FileOpener = new javax.swing.JFileChooser();
         EditToolbar = new javax.swing.JPanel();
         RoadDrawerButton = new javax.swing.JToggleButton();
         LightAdjuster = new javax.swing.JToggleButton();
         ZebraCrossings = new javax.swing.JToggleButton();
-        ScenePanel = new javax.swing.JPanel();
+        ScenePanel = new ScenePanel();
         CurrentSelectedTool = new javax.swing.JLabel();
         SelectedNode = new javax.swing.JLabel();
         NodeOptionsPanel = new javax.swing.JPanel();
@@ -72,6 +79,15 @@ public class MainTest extends javax.swing.JFrame {
         GreenLightSliderText = new javax.swing.JLabel();
         GreenLightSliderText1 = new javax.swing.JLabel();
         ApplyNodeSettings = new javax.swing.JButton();
+        AboutPanel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         ExportScene = new javax.swing.JMenuItem();
@@ -81,6 +97,52 @@ public class MainTest extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         ShowEditingToolbar = new javax.swing.JCheckBoxMenuItem();
         GlobalSettingsMenuItem = new javax.swing.JMenuItem();
+
+        FileSaver.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        FileSaver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FileSaverActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout Frame1Layout = new javax.swing.GroupLayout(Frame1.getContentPane());
+        Frame1.getContentPane().setLayout(Frame1Layout);
+        Frame1Layout.setHorizontalGroup(
+            Frame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Frame1Layout.createSequentialGroup()
+                .addGap(61, 61, 61)
+                .addComponent(FileSaver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(71, Short.MAX_VALUE))
+        );
+        Frame1Layout.setVerticalGroup(
+            Frame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Frame1Layout.createSequentialGroup()
+                .addComponent(FileSaver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 103, Short.MAX_VALUE))
+        );
+
+        FileOpener.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FileOpenerActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout Frame2Layout = new javax.swing.GroupLayout(Frame2.getContentPane());
+        Frame2.getContentPane().setLayout(Frame2Layout);
+        Frame2Layout.setHorizontalGroup(
+            Frame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Frame2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(FileOpener, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        Frame2Layout.setVerticalGroup(
+            Frame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Frame2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(FileOpener, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -241,7 +303,7 @@ public class MainTest extends javax.swing.JFrame {
                     .addComponent(GreenLightSliderText1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NodeOptionsPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(69, Short.MAX_VALUE)
                 .addComponent(ApplyNodeSettings)
                 .addGap(168, 168, 168))
         );
@@ -271,29 +333,91 @@ public class MainTest extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        AboutPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jButton1.setText("Close");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Inan Evin");
+
+        jLabel2.setText("Ruhat Sengul");
+
+        jLabel3.setText("Mohsen Mokhtari");
+
+        jLabel4.setText("Bintou Moulekafou");
+
+        jLabel5.setText("Zeki Volkan Un");
+
+        jLabel6.setText("SE315 Project Management");
+
+        jLabel7.setText("Instructor: Kaya Oguz");
+
+        javax.swing.GroupLayout AboutPanelLayout = new javax.swing.GroupLayout(AboutPanel);
+        AboutPanel.setLayout(AboutPanelLayout);
+        AboutPanelLayout.setHorizontalGroup(
+            AboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AboutPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(AboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jButton1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        AboutPanelLayout.setVerticalGroup(
+            AboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AboutPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(5, 5, 5)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout ScenePanelLayout = new javax.swing.GroupLayout(ScenePanel);
         ScenePanel.setLayout(ScenePanelLayout);
         ScenePanelLayout.setHorizontalGroup(
             ScenePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ScenePanelLayout.createSequentialGroup()
-                .addGap(286, 286, 286)
-                .addGroup(ScenePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ScenePanelLayout.createSequentialGroup()
-                        .addComponent(NodeOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(317, 317, 317))
-                    .addGroup(ScenePanelLayout.createSequentialGroup()
-                        .addGroup(ScenePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(SelectedNode, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
-                            .addComponent(CurrentSelectedTool, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(310, 310, 310))))
+                .addComponent(AboutPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(156, 156, 156)
+                .addComponent(NodeOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(108, 108, 108)
+                .addComponent(CurrentSelectedTool, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ScenePanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(SelectedNode, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         ScenePanelLayout.setVerticalGroup(
             ScenePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ScenePanelLayout.createSequentialGroup()
-                .addComponent(CurrentSelectedTool, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(84, 84, 84)
-                .addComponent(NodeOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGroup(ScenePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(CurrentSelectedTool, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AboutPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(NodeOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
                 .addComponent(SelectedNode, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -379,22 +503,25 @@ public class MainTest extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ExportSceneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportSceneActionPerformed
-        final JFileChooser exportChooser = new JFileChooser();
 
-        ExportFile expFile = new ExportFile();
-        expFile.WriteFile("sa");
+        Frame1.setSize(ScenePanel.getSize().width, ScenePanel.getSize().height);
+        Frame1.setVisible(true);
     }//GEN-LAST:event_ExportSceneActionPerformed
 
     private void ImportSceneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImportSceneActionPerformed
         // TODO add your handling code here:
+        Frame2.setSize(ScenePanel.getSize().width, ScenePanel.getSize().height);
+        Frame2.setVisible(true);
     }//GEN-LAST:event_ImportSceneActionPerformed
 
     private void AboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AboutActionPerformed
         // TODO add your handling code here:
+        AboutPanel.setVisible(true);
     }//GEN-LAST:event_AboutActionPerformed
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
         // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_ExitActionPerformed
 
     private boolean b_ShowToolbarToggle = true;
@@ -502,6 +629,36 @@ public class MainTest extends javax.swing.JFrame {
         GreenLightSliderText1.setText(Integer.toString(GreenLightTimeSlider.getValue()));
     }//GEN-LAST:event_GreenLightTimeSliderStateChanged
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        AboutPanel.setVisible(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void FileSaverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSaverActionPerformed
+        // TODO add your handling code here:
+        String filePath = FileSaver.getSelectedFile().getAbsolutePath();
+        String fileName = FileSaver.getSelectedFile().getName();
+        ExportFile newExport = new ExportFile();
+        String content = "Nodes";
+        for(int i = 0; i < _AllActiveNodes.size();i++)
+        {
+            boolean b_HasLight = _AllActiveNodes.get(i).GetLight() != null ? true : false;
+            content += System.lineSeparator() + "Node " + (i+1)+ System.lineSeparator();
+            content += _AllActiveNodes.get(i).getX() + "," + _AllActiveNodes.get(i).getY() + System.lineSeparator();
+            content += "Light" + b_HasLight;
+        }
+        
+        newExport.WriteFile(content, filePath, fileName);
+        Frame1.setVisible(false);
+    }//GEN-LAST:event_FileSaverActionPerformed
+
+    private void FileOpenerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileOpenerActionPerformed
+        // TODO add your handling code here:
+        
+        
+        Frame2.setVisible(false);
+    }//GEN-LAST:event_FileOpenerActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -572,15 +729,26 @@ public class MainTest extends javax.swing.JFrame {
         NodeOptionsPanel.setVisible(true);
         b_SceneClicksEnabled = false;
     }
+    
+  
+        public JPanel GetScenePanel() { return ScenePanel;}
+    
+    public static ArrayList<Road> _Roads = new ArrayList<Road>();
+ 
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem About;
+    private javax.swing.JPanel AboutPanel;
     private javax.swing.JButton ApplyNodeSettings;
     private javax.swing.JLabel CurrentSelectedTool;
     private javax.swing.JPanel EditToolbar;
     private javax.swing.JMenuItem Exit;
     private javax.swing.JMenuItem ExportScene;
+    private javax.swing.JFileChooser FileOpener;
+    private javax.swing.JFileChooser FileSaver;
+    private javax.swing.JFrame Frame1;
+    private javax.swing.JFrame Frame2;
     private javax.swing.JMenuItem GlobalSettingsMenuItem;
     private javax.swing.JLabel GreenLightSliderText;
     private javax.swing.JLabel GreenLightSliderText1;
@@ -599,6 +767,14 @@ public class MainTest extends javax.swing.JFrame {
     private javax.swing.JLabel YellowLightSliderText1;
     private javax.swing.JSlider YellowLightTimeSlider;
     private javax.swing.JToggleButton ZebraCrossings;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
